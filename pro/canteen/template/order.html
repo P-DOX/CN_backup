@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="l.css">
+</head>
+<body>
+
+<h2>** RECEIPT **</h2>
+
+  <table border="1">
+    <tr>
+        <th>  ID  </th><th> ITEM </th><th> COST/ITEM </th><th> QUANTITY </th><th> TOTAL COST </th>
+    </tr>
+    
+    {%for i in range(0, 3)%} 
+    <tr> 
+      <td>{{lst}}</td> <!-- <td>{{lst[i][1]}}</td> <td>Rs.{{lst[i][3]}}</td> <td>{{lst[i][2]}}</td> <td>Rs.{{lst[i][4]}}</td> -->
+    </tr>
+    {%endfor%} 
+
+</table>
+
+<p>TOTAL AMOUNT TO BE PAID : {{amount}}</p>
+</form>
+
+</body>
+</html>

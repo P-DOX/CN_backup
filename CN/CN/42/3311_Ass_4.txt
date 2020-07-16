@@ -1,0 +1,90 @@
+Q. Unnamed PL/SQL code block: Use of Control structure and Exception handling is mandatory. Write a PL/SQL block of code for the following requirements:- Schema:
+1. Borrower(Roll_no, Name, DateofIssue, NameofBook, Status)
+2. Fine(Roll_no, Date, Amt)
+Accept roll_no & name of book from user 
+Check the number of days (from date of issue); if days are between 15 to 30 then fine amounts will be Rs 5per day 
+If no. of days>30, per day fine will be Rs 50 per day & for days less than 30,    Rs. 5 per day.
+After submitting the book, status will change from I to R
+If condition of fine is true, then details will be stored into fine table
+Frame the problem statement for writing PL/SQL block inline with above statement.
+
+
+
+MariaDB [3311_Ass5]> create table borrower(roll_no int, name varchar(15), date_of_issue date, name_of_book varchar(10), status varchar(10));
+Query OK, 0 rows affected (0.06 sec)
+
+MariaDB [3311_Ass5]> create table fine(roll_no int, amt int);
+Query OK, 0 rows affected (0.05 sec)
+
+MariaDB [3311_Ass5]> delimiter //
+MariaDB [3311_Ass5]> create procedure input(in r_no int, in name varchar(10), in doi date, in nob varchar(10), in st varchar(10))
+    -> insert into borrower values(r_no, name, doi, nob, st);
+    -> //
+Query OK, 0 rows affected
+
+MariaDB [3311_Ass5]> call input(1, "akash", "2015-02-11", "DBMS", "issued")//
+Query OK, 1 row affected (0.07 sec)
+
+MariaDB [3311_Ass5]> call input(2, "anand", "2015-03-11", "CN", "issued")//
+Query OK, 1 row affected (0.02 sec)
+
+MariaDB [3311_Ass5]> call input(3, "abhinav", "2015-11-01", "MATHS", "issued")//
+Query OK, 1 row affected (0.02 sec)
+
+3 rows in set (0.00 sec)
+
+MariaDB [3311_Ass5]> call input(4, "ashok", "2019-07-07", "TOC", "issued")//
+Query OK, 1 row affected (0.01 sec)
+
+MariaDB [3311_Ass5]> call input(5, "ram", "2019-07-01", "SEPM", "issued")//
+Query OK, 1 row affected (0.01 sec)
+
+MariaDB [3311_Ass5]> select * from borrower;
+    -> //
++---------+---------+---------------+--------------+----------+
+| roll_no | name    | date_of_issue | name_of_book | status   |
++---------+---------+---------------+--------------+----------+
+|       1 | akash   | 2015-02-11    | DBMS         | issued   |
+|       2 | anand   | 2015-03-11    | CN           | issued   |
+|       3 | abhinav | 2015-11-01    | MATHS        | issued |
+|       4 | ashok   | 2019-07-07    | TOC          | issued   |
+|       5 | ram     | 2019-07-01    | SEPM         | issued   |
++---------+---------+---------------+--------------+----------+
+5 rows in set (0.00 sec)
+
+MariaDB [3311_Ass5]> create procedure cal_fine(in rn int, in bn varchar(10))
+begin
+declare bdate date;
+declare amt, days int;
+declare cur cursor for select date_of_issue from borrower where (roll_no = rn and name_of_book = bn);
+declare exit handler for not found 
+select "ID not found" as "Error Message";
+set amt = 0;
+open cur;
+fetch cur into bdate;
+close cur;
+set days = to_days(now()) - to_days(bdate);
+if days > 30 then
+set amt = 75 + (days - 30)*50;
+elseif days > 15 then
+set amt = (days - 15)*5;
+end if;
+if amt > 0 then
+insert into fine values(rn, amt, bdate);
+ end if;
+update borrower set status = "returned" where roll_no = rn;
+end
+//
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [3311_Ass5]> call cal_fine(4, "TOC")//
+Query OK, 1 row affected (0.04 sec)
+
+MariaDB [3311_Ass5]> select * from fine//
++---------+------+------------+
+| roll_no | amt  | date_r     |
++---------+------+------------+
+|       4 |   35 | 2019-07-07 |
++---------+------+------------+
+1 row in set (0.00 sec)
+

@@ -1,0 +1,47 @@
+
+SQL> create table table_log 
+  2  
+SQL>  create table table_log 
+  2  (dname varchar(20));
+
+Table created.
+
+SQL> desc table_log;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- -----------------
+ DNAME                                              VARCHAR2(20)
+
+SQL>  DECLARE
+  2      CURSOR c_dept IS
+  3      SELECT deptno, dname
+  4      FROM dept
+  5      WHERE deptno < 40;
+  6   BEGIN
+  7      FOR r_dept IN c_dept
+  8      LOOP
+  9      INSERT INTO table_log
+ 10      VALUES(r_dept.dname);
+ 11      END LOOP;
+ 12   END;
+ 13  /
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from table_log;
+
+DNAME
+--------------------
+ACCOUNTING
+RESEARCH
+SALES
+
+SQL> select * from dept;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+
+SQL> 

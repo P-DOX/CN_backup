@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {background-color: powderblue;  text-align: center;}
+h1   {color: blue;  text-align: center;}
+p    {color: red;  text-align: center;}
+</style>
+</head>
+</style>
+<body>
+
+<h2>** Menu Card **</h2>
+<p>Items available with their cost.</p>
+
+{% for x in lst %}
+{{x}}<br>
+{%endfor%}
+
+<br><br><br><br><br>
+<form action="#" method="POST">
+    {%csrf_token%}
+    Name: &nbsp <input type="text" name="name"><br><br>
+    <p>->Bill<-</p>
+    Item 1: &nbsp <input type="text" name="i1">
+    Quantity: &nbsp <input type="text" name="q1"><br><br>
+    Item 2: &nbsp <input type="text" name="i2">
+    Quantity: &nbsp <input type="text" name="q2"><br><br>
+    <input type="submit" value="SUBMIT">
+    <br><br>
+
+</form>
+
+
+<p></p><p></p><p></p>
+<a href="http://127.0.0.1:8000/accepted"><h3>Exit</h3></a>
+
+</form>
+
+</body>
+</html>
